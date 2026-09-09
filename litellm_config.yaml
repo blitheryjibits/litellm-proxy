@@ -1,0 +1,61 @@
+#######################################################################
+# LiteLLM Production Config for Render + Supabase
+# Safe defaults, stable routing, external Postgres, multi-provider setup
+#######################################################################
+
+general_settings:
+  master_key: ${LITELLM_MASTER_KEY}
+  salt_key: ${LITELLM_SALT_KEY}
+
+  # Supabase Postgres connection
+  database_url: ${DATABASE_URL}
+
+  # Store models + virtual keys + logs in DB
+  store_model_in_db: true
+  store_logs_in_db: true
+  store_api_keys_in_db: true
+
+  # Admin UI
+  enable_ui: true
+
+#######################################################################
+# Provider API Keys (injected via Render environment variables)
+#######################################################################
+litellm_settings:
+  openai_api_key: ${OPENAI_API_KEY}
+  groq_api_key: ${GROQ_API_KEY}
+  nvidia_api_key: ${NVIDIA_API_KEY}
+  xai_api_key: ${XAI_API_KEY}
+  qwen_api_key: ${QWEN_API_KEY}
+  google_api_key: ${GOOGLE_API_KEY}
+
+#######################################################################
+# Model Catalog (safe defaults, no experimental models)
+#######################################################################
+model_list:
+  - model_name: "ling-3.0-flash"
+    litellm_params:
+      model: "ling-3.0-flash"
+      api_base: "https://api.ant-ling.com/v1"
+      api_key: "os.environ/LING_API_KEY"
+      rpm: 6
+
+
+#######################################################################
+# Routing (production-safe)
+#######################################################################
+router_settings:
+  num_retries: 2
+  retry_policy: "exponential_backoff"
+
+  # Optional fallback routing
+  fallback_models:
+    - "groq-llama3"
+
+
+#######################################################################
+# Logging (Supabase)
+#######################################################################
+logging:
+  log_level: "info"
+  log_format: "json"

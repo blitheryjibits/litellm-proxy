@@ -1,0 +1,3 @@
+FROM ghcr.io/berriai/litellm@sha256:d524416722079cef3cba09d498daae97b79068d759fb13f560c31eccf3e545e9
+
+COPY litellm_config.yaml /app/litellm_config.yaml
